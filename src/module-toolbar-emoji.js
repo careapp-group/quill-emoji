@@ -156,7 +156,7 @@ function fn_emojiElementsToPanel(type, panel, quill) {
 
   result.map(function (emoji) {
     let span = document.createElement('span');
-    let t = document.createTextNode(emoji.shortname);
+    let t = document.createTextNode(emoji.name);
     span.appendChild(t);
     span.classList.add('bem');
     span.classList.add('bem-' + emoji.name);
