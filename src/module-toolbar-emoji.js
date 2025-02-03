@@ -154,7 +154,8 @@ function fn_emojiElementsToPanel(type, panel, quill) {
   quill.focus();
 
 
-  result.map(function (emoji) {
+  result.map(function (res) {
+    let emoji = res.item;
     let span = document.createElement('span');
     let t = document.createTextNode(emoji.name);
     span.appendChild(t);
