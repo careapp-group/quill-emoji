@@ -168,7 +168,7 @@ function fn_emojiElementsToPanel(type, panel, quill) {
     span.classList.add("bem");
     span.classList.add("bem-" + emoji.name);
     span.classList.add("ap");
-    let output = "" + emoji.unicode + "";
+    let output = "" + emoji.code_decimal + "";
     span.innerHTML = output + " ";
     panel.appendChild(span);
 
