@@ -163,7 +163,7 @@ function fn_emojiElementsToPanel(type, panel, quill) {
   result.map(function (res) {
     let emoji = res.item;
     let span = document.createElement("span");
-    let t = document.createTextNode(emoji.name);
+    let t = document.createTextNode(emoji.shortname);
     span.appendChild(t);
     span.classList.add("bem");
     span.classList.add("bem-" + emoji.name);
@@ -180,7 +180,7 @@ function fn_emojiElementsToPanel(type, panel, quill) {
           className: "ico",
           innerHTML: "" + emoji.code_decimal + " ",
         });
-        quill.insertText(range.index, emoji.unicode, Quill.sources.USER);
+        quill.insertEmbed(range.index, "emoji", emoji, Quill.sources.USER);
         setTimeout(() => quill.setSelection(range.index + 1), 0);
         fn_close();
       });
