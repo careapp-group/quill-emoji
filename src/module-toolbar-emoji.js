@@ -1,20 +1,19 @@
-import Quill from 'quill';
-import Fuse from 'fuse.js';
-import emojiList from './emoji-list.js';
+import Quill from "quill";
+import Fuse from "fuse.js";
+import emojiList from "./emoji-list.js";
 
-const Module = Quill.import('core/module');
-
+const Module = Quill.import("core/module");
 
 class ToolbarEmoji extends Module {
   constructor(quill, options) {
     super(quill, options);
 
     this.quill = quill;
-    this.toolbar = quill.getModule('toolbar');
-    if (typeof this.toolbar !== 'undefined')
-      this.toolbar.addHandler('emoji', this.checkPaletteExists);
+    this.toolbar = quill.getModule("toolbar");
+    if (typeof this.toolbar !== "undefined")
+      this.toolbar.addHandler("emoji", this.checkPaletteExists);
 
-    var emojiBtns = document.getElementsByClassName('ql-emoji');
+    var emojiBtns = document.getElementsByClassName("ql-emoji");
     if (emojiBtns) {
       [].slice.call(emojiBtns).forEach(function (emojiBtn) {
         emojiBtn.innerHTML = options.buttonIcon;
@@ -25,8 +24,8 @@ class ToolbarEmoji extends Module {
   checkPaletteExists() {
     let quill = this.quill;
     fn_checkDialogOpen(quill);
-    this.quill.on('text-change', function (delta, oldDelta, source) {
-      if (source === 'user') {
+    this.quill.on("text-change", function (delta, oldDelta, source) {
+      if (source === "user") {
         fn_close();
       }
     });
@@ -34,14 +33,15 @@ class ToolbarEmoji extends Module {
 }
 
 ToolbarEmoji.DEFAULTS = {
-  buttonIcon: '<svg viewbox="0 0 18 18"><circle class="ql-fill" cx="7" cy="7" r="1"></circle><circle class="ql-fill" cx="11" cy="7" r="1"></circle><path class="ql-stroke" d="M7,10a2,2,0,0,0,4,0H7Z"></path><circle class="ql-stroke" cx="9" cy="9" r="6"></circle></svg>'
+  buttonIcon:
+    '<svg viewbox="0 0 18 18"><circle class="ql-fill" cx="7" cy="7" r="1"></circle><circle class="ql-fill" cx="11" cy="7" r="1"></circle><path class="ql-stroke" d="M7,10a2,2,0,0,0,4,0H7Z"></path><circle class="ql-stroke" cx="9" cy="9" r="6"></circle></svg>',
 };
 
 function fn_close() {
-  let ele_emoji_plate = document.getElementById('emoji-palette');
-  document.getElementById('emoji-close-div').style.display = "none";
+  let ele_emoji_plate = document.getElementById("emoji-palette");
+  document.getElementById("emoji-close-div").style.display = "none";
   if (ele_emoji_plate) {
-    ele_emoji_plate.remove()
+    ele_emoji_plate.remove();
   }
 }
 
@@ -56,80 +56,89 @@ function fn_checkDialogOpen(quill) {
 
 function fn_showEmojiPalette(quill) {
   const paletteWidthAndHeight = 250;
-  let ele_emoji_area = document.createElement('div');
+  let ele_emoji_area = document.createElement("div");
   let selection = quill.getSelection();
   const selectionBounds = quill.getBounds(selection.index);
   const editorBounds = quill.container.getBoundingClientRect();
   const selectionCenter = (selectionBounds.left + selectionBounds.right) / 2;
   const selectionMiddle = (selectionBounds.top + selectionBounds.bottom) / 2;
-  const paletteLeft = editorBounds.left + selectionCenter + paletteWidthAndHeight <= document.documentElement.clientWidth ? selectionCenter : editorBounds.left - paletteWidthAndHeight;
-  const paletteTop = editorBounds.top + selectionMiddle + paletteWidthAndHeight + 10 <= document.documentElement.clientHeight ? selectionMiddle + 10 :
-    editorBounds.top + selectionMiddle - paletteWidthAndHeight - 10 >= 0 ? selectionMiddle - paletteWidthAndHeight - 10 :
-      document.documentElement.clientHeight - paletteWidthAndHeight - editorBounds.top;
+  const paletteLeft =
+    editorBounds.left + selectionCenter + paletteWidthAndHeight <=
+    document.documentElement.clientWidth
+      ? selectionCenter
+      : editorBounds.left - paletteWidthAndHeight;
+  const paletteTop =
+    editorBounds.top + selectionMiddle + paletteWidthAndHeight + 10 <=
+    document.documentElement.clientHeight
+      ? selectionMiddle + 10
+      : editorBounds.top + selectionMiddle - paletteWidthAndHeight - 10 >= 0
+      ? selectionMiddle - paletteWidthAndHeight - 10
+      : document.documentElement.clientHeight -
+        paletteWidthAndHeight -
+        editorBounds.top;
 
   quill.container.appendChild(ele_emoji_area);
-  ele_emoji_area.id = 'emoji-palette';
+  ele_emoji_area.id = "emoji-palette";
   ele_emoji_area.style.left = `${paletteLeft}px`;
   ele_emoji_area.style.top = `${paletteTop}px`;
 
-  let tabToolbar = document.createElement('div');
+  let tabToolbar = document.createElement("div");
   tabToolbar.id = "tab-toolbar";
   ele_emoji_area.appendChild(tabToolbar);
 
   //panel
-  let panel = document.createElement('div');
+  let panel = document.createElement("div");
   panel.id = "tab-panel";
   ele_emoji_area.appendChild(panel);
 
   var emojiType = [
-    {'type': 'p', 'name': 'people', 'content': '<div class="i-people"></div>'},
-    {'type': 'n', 'name': 'nature', 'content': '<div class="i-nature"></div>'},
-    {'type': 'd', 'name': 'food', 'content': '<div class="i-food"></div>'},
-    {'type': 's', 'name': 'symbols', 'content': '<div class="i-symbols"></div>'},
-    {'type': 'a', 'name': 'activity', 'content': '<div class="i-activity"></div>'},
-    {'type': 't', 'name': 'travel', 'content': '<div class="i-travel"></div>'},
-    {'type': 'o', 'name': 'objects', 'content': '<div class="i-objects"></div>'},
-    {'type': 'f', 'name': 'flags', 'content': '<div class="i-flags"></div>'}
+    { type: "p", name: "people", content: '<div class="i-people"></div>' },
+    { type: "n", name: "nature", content: '<div class="i-nature"></div>' },
+    { type: "d", name: "food", content: '<div class="i-food"></div>' },
+    { type: "s", name: "symbols", content: '<div class="i-symbols"></div>' },
+    { type: "a", name: "activity", content: '<div class="i-activity"></div>' },
+    { type: "t", name: "travel", content: '<div class="i-travel"></div>' },
+    { type: "o", name: "objects", content: '<div class="i-objects"></div>' },
+    { type: "f", name: "flags", content: '<div class="i-flags"></div>' },
   ];
 
-  let tabElementHolder = document.createElement('ul');
+  let tabElementHolder = document.createElement("ul");
   tabToolbar.appendChild(tabElementHolder);
 
-  if (document.getElementById('emoji-close-div') === null) {
-    let closeDiv = document.createElement('div');
-    closeDiv.id = 'emoji-close-div';
+  if (document.getElementById("emoji-close-div") === null) {
+    let closeDiv = document.createElement("div");
+    closeDiv.id = "emoji-close-div";
     closeDiv.addEventListener("click", fn_close, false);
-    document.getElementsByTagName('body')[0].appendChild(closeDiv);
+    document.getElementsByTagName("body")[0].appendChild(closeDiv);
   } else {
-    document.getElementById('emoji-close-div').style.display = "block";
+    document.getElementById("emoji-close-div").style.display = "block";
   }
-
 
   emojiType.map(function (emojiType) {
     //add tab bar
-    let tabElement = document.createElement('li');
-    tabElement.classList.add('emoji-tab');
-    tabElement.classList.add('filter-' + emojiType.name);
+    let tabElement = document.createElement("li");
+    tabElement.classList.add("emoji-tab");
+    tabElement.classList.add("filter-" + emojiType.name);
     tabElement.innerHTML = emojiType.content;
     tabElement.dataset.filter = emojiType.type;
     tabElementHolder.appendChild(tabElement);
 
-    let emojiFilter = document.querySelector('.filter-' + emojiType.name);
-    emojiFilter.addEventListener('click', function () {
-      let tab = document.querySelector('.active');
+    let emojiFilter = document.querySelector(".filter-" + emojiType.name);
+    emojiFilter.addEventListener("click", function () {
+      let tab = document.querySelector(".active");
       if (tab) {
-        tab.classList.remove('active');
+        tab.classList.remove("active");
       }
-      emojiFilter.classList.toggle('active');
+      emojiFilter.classList.toggle("active");
       fn_updateEmojiContainer(emojiFilter, panel, quill);
-    })
+    });
   });
   fn_emojiPanelInit(panel, quill);
 }
 
 function fn_emojiPanelInit(panel, quill) {
-  fn_emojiElementsToPanel('p', panel, quill);
-  document.querySelector('.filter-people').classList.add('active');
+  fn_emojiElementsToPanel("p", panel, quill);
+  document.querySelector(".filter-people").classList.add("active");
 }
 
 function fn_emojiElementsToPanel(type, panel, quill) {
@@ -141,9 +150,7 @@ function fn_emojiElementsToPanel(type, panel, quill) {
     distance: 100,
     maxPatternLength: 32,
     minMatchCharLength: 3,
-    keys: [
-      "category"
-    ]
+    keys: ["category"],
   };
   let fuse = new Fuse(emojiList, fuseOptions);
   let result = fuse.search(type);
@@ -153,24 +160,26 @@ function fn_emojiElementsToPanel(type, panel, quill) {
 
   quill.focus();
 
-
   result.map(function (res) {
     let emoji = res.item;
-    let span = document.createElement('span');
+    let span = document.createElement("span");
     let t = document.createTextNode(emoji.name);
     span.appendChild(t);
-    span.classList.add('bem');
-    span.classList.add('bem-' + emoji.name);
-    span.classList.add('ap');
-    let output = '' + emoji.unicode + '';
-    span.innerHTML = output + ' ';
+    span.classList.add("bem");
+    span.classList.add("bem-" + emoji.name);
+    span.classList.add("ap");
+    let output = "" + emoji.unicode + "";
+    span.innerHTML = output + " ";
     panel.appendChild(span);
 
-    let customButton = document.querySelector('.bem-' + emoji.name);
+    let customButton = document.querySelector(".bem-" + emoji.name);
     if (customButton) {
-      customButton.addEventListener('click', function () {
+      customButton.addEventListener("click", function () {
         let range = quill.getSelection(true);
-        makeElement("span", {className: "ico", innerHTML: '' + emoji.unicode + ' '});
+        makeElement("span", {
+          className: "ico",
+          innerHTML: "" + emoji.code_decimal + " ",
+        });
         quill.insertText(range.index, emoji.unicode, Quill.sources.USER);
         setTimeout(() => quill.setSelection(range.index + 1), 0);
         fn_close();
@@ -189,10 +198,9 @@ function fn_updateEmojiContainer(emojiFilter, panel, quill) {
 
 function makeElement(tag, attrs, ...children) {
   const elem = document.createElement(tag);
-  Object.keys(attrs).forEach(key => elem[key] = attrs[key]);
-  children.forEach(child => {
-    if (typeof child === "string")
-      child = document.createTextNode(child);
+  Object.keys(attrs).forEach((key) => (elem[key] = attrs[key]));
+  children.forEach((child) => {
+    if (typeof child === "string") child = document.createTextNode(child);
     elem.appendChild(child);
   });
   return elem;
